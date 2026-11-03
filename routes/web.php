@@ -1,9 +1,10 @@
-<?php
 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,14 +14,30 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Route::resource('posts', PostController::class);
-
 Route::middleware('auth')->group(function () {
-    Route::resource('posts', PostController::class)-> except(['index','show']);
-    Route::resource('posts', PostController::class)->only(['index', 'show']);
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // REPORTS - Keep these BEFORE the resource route
+    Route::get('/posts/reports', [PostReportController::class, 'index'])
+        ->name('posts.reports.index');
+
+    Route::get('/posts/reports/pdf', [PostReportController::class, 'exportPdf'])
+        ->name('posts.reports.pdf');
+
+    Route::get('/posts/reports/csv', [PostReportController::class, 'exportCsv'])
+        ->name('posts.reports.csv');
+
+    // BLOG POST CRUD
+    Route::resource('posts', PostController::class);
+
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

@@ -31,10 +31,18 @@
         </p>
     </div>
 
+    <div class="flex shrink-0 items-center gap-4">
+
     <a href="{{ route('posts.create') }}"
-       class="inline-flex shrink-0 items-center justify-center rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700">
+       class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700">
         + Create New Post
     </a>
+
+    <a href="{{ route('posts.reports.index') }}"
+        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700">
+     View Reports
+    </a>
+    </div>
 </div>
 
             @if (session('success'))

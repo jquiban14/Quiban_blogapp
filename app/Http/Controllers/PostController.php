@@ -7,80 +7,67 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Display all blog posts.
     public function index()
     {
-       $posts = Post::latest()->get();
-       return view('posts.index', compact('posts'));
+        $posts = Post::latest()->get();
+
+        return view('posts.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Show the create form.
     public function create()
     {
         return view('posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a new blog post.
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'body' => 'required'
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
         ]);
- 
-        Post::create($request->all());
- 
+
+        Post::create($validated);
+
         return redirect()->route('posts.index')
-                         ->with('success', 'Post created successfully.'); 
+            ->with('success', 'Post created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Display a specific blog post.
     public function show(Post $post)
     {
         return view('posts.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Show the edit form.
     public function edit(Post $post)
     {
         return view('posts.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update an existing blog post.
     public function update(Request $request, Post $post)
     {
-        $request->validate([
-            'title' => 'required',
-            'body' => 'required'
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
         ]);
 
+        // THIS WAS MISSING!
+        $post->update($validated);
+
         return redirect()->route('posts.index')
-                         ->with('success', 'Post updated successfully');
+            ->with('success', 'Post updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Delete a blog post.
     public function destroy(Post $post)
     {
         $post->delete();
- 
-        return redirect()->route('posts.index')
-                         ->with('success', 'Post deleted successfully');
-    }
-      
-        
-    }
 
+        return redirect()->route('posts.index')
+            ->with('success', 'Post deleted successfully.');
+    }
+}
